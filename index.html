@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bible Blitz Ultra</title>
+    <title>Bible Blitz: Party Edition</title>
     <style>
         :root {
-            /* Universal Premium Dark Slate Glass Palette */
             --primary: #6366f1;
             --primary-hover: #4f46e5;
             --success: #10b981;
@@ -39,7 +38,6 @@
             align-items: center;
         }
 
-        /* 🧿 Ambient Background Mesh (OLED Friendly) */
         .bg-mesh {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -50,7 +48,6 @@
             z-index: -2;
         }
 
-        /* ✨ Subtle Canvas Particles Background */
         #bg-canvas {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -59,7 +56,6 @@
             opacity: 0.6;
         }
 
-        /* 🎬 Cinematic App Intro Screen */
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -91,7 +87,6 @@
             100% { opacity: 0; transform: translateY(-20px); }
         }
 
-        /* 🎨 Universal Premium App Shell */
         .app-shell {
             width: 90%;
             max-width: 430px;
@@ -105,27 +100,17 @@
             transform: translateY(40px);
             opacity: 0;
             transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .app-shell.active { transform: translateY(0); opacity: 1; }
 
-        /* 🔐 Secret Mode Dynamic Injection Styling */
-        .app-shell.secret-active {
-            border-color: var(--gold) !important;
-            box-shadow: 0 0 40px rgba(251, 191, 36, 0.15), 0 25px 60px -15px rgba(0,0,0,0.8);
-        }
-        .app-shell.secret-active .scrambled {
-            color: var(--gold) !important;
-            filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.6));
-        }
-
-        /* Screen View Flow Containers */
         .view { display: flex; flex-direction: column; }
         .hidden { display: none !important; }
 
         h1 { font-size: 1.8rem; font-weight: 800; text-align: center; letter-spacing: -0.5px; }
         .subtitle { color: var(--text-sub); text-align: center; font-size: 0.9rem; margin-bottom: 25px; }
 
-        /* Interface Buttons */
         .btn {
             width: 100%;
             padding: 18px;
@@ -145,7 +130,6 @@
         .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); box-shadow: none; margin-top: 12px; }
         .btn-next { background: var(--text-main); color: #0f172a; box-shadow: none; }
 
-        /* Selection Matrices */
         .section-label { font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; margin: 20px 0 8px 4px; letter-spacing: 1px; }
         .grid-select { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .cat-grid { grid-template-columns: repeat(2, 1fr); }
@@ -163,18 +147,17 @@
         }
         .pill-btn.active { border-color: var(--primary); background: rgba(99, 102, 241, 0.2); color: white; }
 
-        /* Core HUD & Engine Metrics */
         .hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.5px; }
         .lives { color: var(--error); letter-spacing: 2px; }
         .streak-pill { background: var(--warning); color: #000; padding: 4px 12px; border-radius: 100px; font-weight: 900; font-size: 0.75rem; }
         
-        .timer-track { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 100px; margin-bottom: 30px; overflow: hidden; }
+        .timer-track { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 100px; margin-bottom: 20px; overflow: hidden; }
         .timer-bar { width: 100%; height: 100%; background: var(--primary); transform-origin: left; transition: transform 0.1s linear; }
 
         .scrambled {
             font-size: 2.8rem;
             font-weight: 900;
-            margin: 30px 0;
+            margin: 20px 0;
             text-align: center;
             letter-spacing: 6px;
             text-transform: uppercase;
@@ -199,13 +182,36 @@
 
         .feedback { text-align: center; font-weight: 700; min-height: 24px; margin-top: 15px; font-size: 0.95rem; }
 
-        /* Analytical Data Nodes */
-        .stats-summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-node { background: var(--surface-accent); padding: 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03); text-align: center; }
-        .stat-val { font-size: 1.5rem; font-weight: 900; color: var(--primary); display: block; }
-        .stat-lbl { font-size: 0.65rem; color: var(--text-sub); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        /* Setup / Leaderboard Styles */
+        .player-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .player-input-row input { margin-bottom: 0; padding: 14px; font-size: 1rem; text-align: left; }
+        
+        .leaderboard-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; }
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface-accent);
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+        .leaderboard-rank { font-weight: 900; color: var(--gold); font-size: 1.1rem; width: 30px; }
+        .leaderboard-name { flex-grow: 1; font-weight: 700; }
+        .leaderboard-score { font-weight: 800; color: var(--success); }
 
-        /* Animation Keyframe Handlers */
+        .turn-announcer {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--primary);
+            padding: 12px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
         .shake { animation: shake 0.25s cubic-bezier(.36,.07,.19,.97) both; }
     </style>
@@ -230,12 +236,25 @@
             <h1>Bible Blitz</h1>
             <p class="subtitle">Premium Scriptural Enigma Game</p>
 
-            <div class="stats-summary">
-                <div class="stat-node"><span class="stat-val" id="dash-games">0</span><span class="stat-lbl">Campaigns</span></div>
-                <div class="stat-node"><span class="stat-val" id="dash-streak" style="color:var(--warning);">0</span><span class="stat-lbl">Daily Streak</span></div>
+            <button class="btn" onclick="switchActiveView('view-setup')">👥 Pass & Play Mode</button>
+            <button class="btn btn-secondary" onclick="startSinglePlayerSetup()">👤 Solo Campaign</button>
+        </div>
+
+        <!-- 👥 VIEW: MULTIPLAYER SETUP -->
+        <div id="view-setup" class="view hidden">
+            <h1>Player Setup</h1>
+            <p class="subtitle">Add competitors for local blitz</p>
+            
+            <div id="player-inputs-container">
+                <div class="player-input-row">
+                    <input type="text" class="player-name-field" placeholder="Player 1 Name" value="Player 1" spellcheck="false" autocomplete="off">
+                </div>
+                <div class="player-input-row">
+                    <input type="text" class="player-name-field" placeholder="Player 2 Name" value="Player 2" spellcheck="false" autocomplete="off">
+                </div>
             </div>
 
-            <div id="secret-notice" style="text-align: center; font-size: 0.75rem; font-weight: 800; color: var(--gold); margin-bottom: 10px;" class="hidden">👑 ELITE MODE ACCESS UNLOCKED</div>
+            <button class="btn btn-secondary" style="margin-top: 0; margin-bottom: 20px;" onclick="addPlayerInputField()">➕ Add Competitor</button>
 
             <div class="section-label">Difficulty Settings</div>
             <div class="grid-select">
@@ -252,12 +271,13 @@
                 <button class="pill-btn" data-type="cat" onclick="setPreference('cat', 'women', this)">Women</button>
             </div>
 
-            <button class="btn" style="margin-top: 25px;" onclick="startCampaignSession()">Launch Blitz</button>
-            <button class="btn btn-secondary" onclick="switchActiveView('view-stats')">Analytics Ledger</button>
+            <button class="btn" style="margin-top: 25px;" onclick="initPartySession()">Launch Match</button>
+            <button class="btn btn-secondary" onclick="switchActiveView('view-dash')">Cancel</button>
         </div>
 
         <!-- 🎮 VIEW: GAMEPLAY LOOP -->
         <div id="view-game" class="view hidden">
+            <div id="active-turn-hud" class="turn-announcer">Player Turn</div>
             <div class="hud">
                 <div>SCORE: <span id="game-score">0</span></div>
                 <div id="game-streak-pill" class="streak-pill hidden">🔥 <span id="game-streak-val">0</span></div>
@@ -274,37 +294,20 @@
             <div class="feedback" id="game-feedback"></div>
         </div>
 
-        <!-- 🏁 VIEW: GAME WRAP/REPORT CARD -->
+        <!-- 🏁 VIEW: MULTIPLAYER FINAL LEADERBOARD -->
         <div id="view-end" class="view hidden">
-            <h1 id="end-title">Session Concluded</h1>
-            <p class="subtitle" id="end-subtitle">Analytics breakdown metrics</p>
+            <h1>Podium Standings</h1>
+            <p class="subtitle">Final game performance summary</p>
 
-            <div class="stats-summary">
-                <div class="stat-node"><span class="stat-val" id="end-score">0</span><span class="stat-lbl">Final Score</span></div>
-                <div class="stat-node"><span class="stat-val" id="end-bonus" style="color:var(--success);">+0</span><span class="stat-lbl">Velocity Bonus</span></div>
+            <div class="leaderboard-list" id="leaderboard-insertion-point">
+                <!-- Injected dynamically -->
             </div>
 
-            <button class="btn" onclick="switchActiveView('view-dash')">Dismiss Report</button>
-        </div>
-
-        <!-- 📊 VIEW: GENERAL STATISTICAL LEDGER -->
-        <div id="view-stats" class="view hidden">
-            <h1>Analytics Ledger</h1>
-            <p class="subtitle">Permanent Local Performance Metrics</p>
-
-            <div class="stats-summary">
-                <div class="stat-node"><span class="stat-val" id="stat-accuracy">0%</span><span class="stat-lbl">Accuracy Rating</span></div>
-                <div class="stat-node"><span class="stat-val" id="stat-best-streak" style="color:var(--warning);">0</span><span class="stat-lbl">Peak Hit Streak</span></div>
-                <div class="stat-node"><span class="stat-val" id="stat-correct" style="color:var(--success);">0</span><span class="stat-lbl">Correct Submissions</span></div>
-                <div class="stat-node"><span class="stat-val" id="stat-wrong" style="color:var(--error);">0</span><span class="stat-lbl">System Failures</span></div>
-            </div>
-
-            <button class="btn" onclick="switchActiveView('view-dash')">Return</button>
+            <button class="btn" onclick="switchActiveView('view-dash')">Dismiss Match</button>
         </div>
     </div>
 
     <script>
-        // 🧩 ENGINES CORE DATA MATRIX
         const VOCABULARY_DICTIONARY = {
             easy: {
                 all: ["Peter", "Mary", "Ruth", "Noah", "David", "Adam", "Eve", "John", "Mark", "Paul", "Isaac"],
@@ -326,30 +329,24 @@
             }
         };
 
-        // ⚙️ INITIAL CONFIG & POOL STATES
         let activePrefs = { diff: 'easy', cat: 'all' };
+        let partyPlayers = [];
+        let currentPlayerIndex = 0;
+        
         let liveSession = { pool: [], index: 0, score: 0, speedBonus: 0, streak: 0, lives: 3, timeLeft: 100, lockTurn: false };
         let coreSystemClock = null;
-        let isSecretUnlocked = localStorage.getItem('scramble_secret') === 'true';
 
-        // 💾 SECURE STORAGE RECEPTACLE
-        let savedStore = JSON.parse(localStorage.getItem('scramble_System_Data')) || {
-            games: 0, correct: 0, wrong: 0, topStreak: 0, dailyStreak: 0, timestamp: null
-        };
-
-        // 🎬 MULTI-PLATFORM RUNTIME LOAD
         window.onload = () => {
             initBackgroundParticles();
             setTimeout(() => {
                 document.getElementById('intro-screen').style.transform = 'translateY(-100%)';
                 setTimeout(() => {
                     document.getElementById('app-shell').classList.add('active');
-                    if(isSecretUnlocked) enableSecretGraphics();
                 }, 400);
             }, 2200);
         };
 
-        // 🧿 BACKGROUND PARTICLES SYSTEM
+        // 🧿 CANVAS PARTICLES ENGINE
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particleArray = [];
@@ -372,7 +369,6 @@
 
         function renderParticleLoop() {
             ctx.clearRect(0,0, canvas.width, canvas.height);
-            ctx.fillStyle = "rgba(255, 255, 255, ";
             for(let i=0; i<particleArray.length; i++) {
                 let p = particleArray[i];
                 ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
@@ -386,7 +382,7 @@
         }
         window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
-        // 🎵 PLATFORM OSCILLATOR AUDIO SYNTHESIZER 
+        // 🎵 CORE HARDWARE OSCILLATOR SYNTHESIZER
         function playSynthesizedAudio(flavor) {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -395,8 +391,8 @@
                 osc.connect(gain); gain.connect(audioCtx.destination);
 
                 if (flavor === 'right') {
-                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-                    osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.08); // A5
+                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.08);
                     gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
                     osc.start(); osc.stop(audioCtx.currentTime + 0.22);
                 } else if (flavor === 'wrong') {
@@ -413,23 +409,20 @@
                     gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
                     osc.start(); osc.stop(audioCtx.currentTime + 0.45);
                 }
-            } catch(error) { console.log("Audio block prevented."); }
+            } catch(error) { console.log("Audio contexts blocked."); }
         }
 
-        // 📳 MULTI-PLATFORM HAPTIC VIBRATION
         function invokeHapticFeedback(pattern) {
             if (navigator.vibrate) navigator.vibrate(pattern);
         }
 
-        // 🎲 GENERATIVE TEXT SHUFFLER
         function calculateScramble(word) {
             let splitArr = word.toUpperCase().split(''), iterations = splitArr.length;
             while (iterations--) {
                 let randomTarget = Math.floor(Math.random() * (iterations + 1));
                 [splitArr[iterations], splitArr[randomTarget]] = [splitArr[randomTarget], splitArr[iterations]];
             }
-            let outputStr = splitArr.join('');
-            return (outputStr === word.toUpperCase() && word.length > 2) ? calculateScramble(word) : outputStr;
+            return splitArr.join('');
         }
 
         function setPreference(category, value, element) {
@@ -441,43 +434,51 @@
         function switchActiveView(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
             document.getElementById(viewId).classList.remove('hidden');
-            if(viewId === 'view-dash') syncDashboardData();
-            if(viewId === 'view-stats') syncLedgerData();
         }
 
-        // 📊 STORAGE SYNCHRONIZATION DATA LOOPS
-        function syncDashboardData() {
-            evaluateDailyStreakTracking();
-            document.getElementById('dash-games').textContent = savedStore.games;
-            document.getElementById('dash-streak').textContent = savedStore.dailyStreak;
+        // 👥 PARTY EXTRA SETTINGS SETUP
+        function addPlayerInputField() {
+            const container = document.getElementById('player-inputs-container');
+            const count = container.children.length + 1;
+            if(count > 6) return alert("Maximum party limit is 6 local players.");
+            
+            const div = document.createElement('div');
+            div.className = 'player-input-row';
+            div.innerHTML = `<input type="text" class="player-name-field" placeholder="Player ${count} Name" value="Player ${count}" spellcheck="false" autocomplete="off">`;
+            container.appendChild(div);
         }
 
-        function syncLedgerData() {
-            const analyticalTotal = savedStore.correct + savedStore.wrong;
-            const absolutePct = analyticalTotal === 0 ? 0 : Math.round((savedStore.correct / analyticalTotal) * 100);
-            document.getElementById('stat-accuracy').textContent = absolutePct + "%";
-            document.getElementById('stat-best-streak').textContent = savedStore.topStreak;
-            document.getElementById('stat-correct').textContent = savedStore.correct;
-            document.getElementById('stat-wrong').textContent = savedStore.wrong;
+        function startSinglePlayerSetup() {
+            partyPlayers = [{ name: "Solo Runner", score: 0 }];
+            currentPlayerIndex = 0;
+            switchActiveView('view-setup');
+            // Hard clean multi-inputs to solo view variant
+            document.getElementById('player-inputs-container').innerHTML = `
+                <div class="player-input-row">
+                    <input type="text" class="player-name-field" placeholder="Your Name" value="Champion" spellcheck="false" autocomplete="off">
+                </div>`;
         }
 
-        function evaluateDailyStreakTracking() {
-            const timestampNow = new Date();
-            if (savedStore.timestamp) {
-                const finalDateObj = new Date(savedStore.timestamp);
-                const deltaDuration = Math.abs(timestampNow - finalDateObj);
-                const elapsedDays = Math.ceil(deltaDuration / (1000 * 60 * 60 * 24));
-                if (elapsedDays > 1) savedStore.dailyStreak = 0; // Streak broken over 24H gap
-            }
-            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
+        function initPartySession() {
+            partyPlayers = [];
+            const fields = document.querySelectorAll('.player-name-field');
+            fields.forEach(f => {
+                let val = f.value.trim();
+                if(val !== "") partyPlayers.push({ name: val, score: 0 });
+            });
+
+            if(partyPlayers.length === 0) partyPlayers.push({ name: "Player 1", score: 0 });
+            
+            currentPlayerIndex = 0;
+            launchIndividualPlayerTurn();
         }
 
-        // 🎮 LIVE OPERATIONS ENGINE
-        function startCampaignSession() {
+        function launchIndividualPlayerTurn() {
             let selectedPool = VOCABULARY_DICTIONARY[activePrefs.diff][activePrefs.cat];
             if(!selectedPool || selectedPool.length === 0) selectedPool = VOCABULARY_DICTIONARY[activePrefs.diff]['all'];
             
-            liveSession.pool = selectedPool.map(strName => ({ original: strName, scrambled: calculateScramble(strName) })).sort(() => Math.random() - 0.5);
+            // Generate 5 distinct random words per player assignment 
+            liveSession.pool = selectedPool.map(strName => ({ original: strName, scrambled: calculateScramble(strName) })).sort(() => Math.random() - 0.5).slice(0, 5);
             liveSession.index = 0;
             liveSession.score = 0;
             liveSession.speedBonus = 0;
@@ -485,18 +486,16 @@
             liveSession.lives = 3;
             liveSession.lockTurn = false;
 
-            savedStore.games++;
-            savedStore.timestamp = new Date().getTime();
-            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
-
             switchActiveView('view-game');
             syncHUD();
             displayCurrentRound();
         }
 
         function syncHUD() {
+            document.getElementById('active-turn-hud').textContent = `🎮 ${partyPlayers[currentPlayerIndex].name}'s Turn`;
             document.getElementById('game-score').textContent = liveSession.score;
             document.getElementById('game-lives').textContent = "❤️".repeat(liveSession.lives);
+            
             const streakPill = document.getElementById('game-streak-pill');
             if (liveSession.streak > 0) {
                 streakPill.classList.remove('hidden');
@@ -508,7 +507,7 @@
 
         function displayCurrentRound() {
             if(liveSession.index >= liveSession.pool.length || liveSession.lives <= 0) {
-                return compileFinalReport();
+                return concludeIndividualPlayerTurn();
             }
             liveSession.lockTurn = false;
             document.getElementById('scrambled-target').textContent = liveSession.pool[liveSession.index].scrambled;
@@ -534,7 +533,7 @@
                 if(liveSession.timeLeft <= 0) {
                     liveSession.timeLeft = 0;
                     clearInterval(coreSystemClock);
-                    evaluateSubmissionData(true); // Process forced timeout fail
+                    evaluateSubmissionData(true);
                 }
                 barGraphic.style.transform = `scaleX(${liveSession.timeLeft / 100})`;
             }, 100);
@@ -559,24 +558,20 @@
 
             if (!forcedTimeout && processingGuess === actualSolution) {
                 liveSession.score += 10;
-                savedStore.correct++;
                 liveSession.streak++;
-                if(liveSession.streak > savedStore.topStreak) savedStore.topStreak = liveSession.streak;
 
                 let velocityBonusPoints = 0;
                 if(liveSession.timeLeft > 50) {
                     velocityBonusPoints = Math.round((liveSession.timeLeft - 50) / 8);
-                    liveSession.speedBonus += velocityBonusPoints;
                     liveSession.score += velocityBonusPoints;
                 }
 
                 invokeHapticFeedback(40);
                 playSynthesizedAudio('right');
-                document.getElementById('game-feedback').innerHTML = `<span style="color:var(--success)">✨ Perfect Execution! ${velocityBonusPoints > 0 ? '+'+velocityBonusPoints+' Velocity!':''}</span>`;
+                document.getElementById('game-feedback').innerHTML = `<span style="color:var(--success)">✨ Perfect! +${10 + velocityBonusPoints} Points!</span>`;
             } else {
                 liveSession.lives--;
                 liveSession.streak = 0;
-                savedStore.wrong++;
 
                 invokeHapticFeedback([90, 40, 90]);
                 playSynthesizedAudio('wrong');
@@ -585,8 +580,8 @@
                 frameShell.classList.add('shake');
                 setTimeout(() => frameShell.classList.remove('shake'), 300);
 
-                let reportAlertString = forcedTimeout ? "⏰ Chrono Expired!" : "❌ Verification Deficit!";
-                document.getElementById('game-feedback').innerHTML = `<span style="color:var(--error)">${reportAlertString} solution: ${liveSession.pool[liveSession.index].original}</span>`;
+                let reportAlertString = forcedTimeout ? "⏰ Out of Time!" : "❌ Incorrect!";
+                document.getElementById('game-feedback').innerHTML = `<span style="color:var(--error)">${reportAlertString} Solution: ${liveSession.pool[liveSession.index].original}</span>`;
             }
             
             textElement.disabled = true;
@@ -595,50 +590,49 @@
             const subBtn = document.getElementById('game-action-btn');
             subBtn.textContent = "Proceed";
             subBtn.className = "btn btn-next";
-            
-            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
-            verifyScoreUnlocks();
         }
 
-        // 🔐 PRO UNLOCKS SYSTEM
-        function verifyScoreUnlocks() {
-            if(liveSession.score >= 110 && !isSecretUnlocked) {
-                isSecretUnlocked = true;
-                localStorage.setItem('scramble_secret', 'true');
-                enableSecretGraphics();
-            }
-        }
-
-        function enableSecretGraphics() {
-            document.getElementById('app-shell').classList.add('secret-active');
-            document.getElementById('secret-notice').classList.remove('hidden');
-        }
-
-        function compileFinalReport() {
+        function concludeIndividualPlayerTurn() {
             clearInterval(coreSystemClock);
-            
-            if(liveSession.score > 20) {
-                const cachedDayStr = savedStore.timestamp ? new Date(savedStore.timestamp).toDateString() : null;
-                const activeDayStr = new Date().toDateString();
-                if(cachedDayStr !== activeDayStr) savedStore.dailyStreak++;
+            partyPlayers[currentPlayerIndex].score = liveSession.score;
+
+            currentPlayerIndex++;
+            if(currentPlayerIndex < partyPlayers.length) {
+                alert(`Next up: ${partyPlayers[currentPlayerIndex].name}! Pass the device.`);
+                launchIndividualPlayerTurn();
+            } else {
+                displayGrandLeaderboard();
             }
-            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
+        }
 
-            document.getElementById('end-title').textContent = liveSession.lives <= 0 ? "Defeat" : "Campaign Clear";
-            document.getElementById('end-title').style.color = liveSession.lives <= 0 ? "var(--error)" : "var(--success)";
-            document.getElementById('end-score').textContent = liveSession.score;
-            document.getElementById('end-bonus').textContent = "+" + liveSession.speedBonus;
+        function displayGrandLeaderboard() {
+            // Sort leaderboard rankings based on highest score metrics
+            partyPlayers.sort((a,b) => b.score - a.score);
+            
+            const InsertionContainer = document.getElementById('leaderboard-insertion-point');
+            InsertionContainer.innerHTML = "";
 
-            if(liveSession.lives > 0) playSynthesizedAudio('victory');
+            partyPlayers.forEach((player, rankIdx) => {
+                const item = document.createElement('div');
+                item.className = "leaderboard-item";
+                
+                let medal = rankIdx === 0 ? "🥇" : rankIdx === 1 ? "🥈" : rankIdx === 2 ? "🥉" : `#${rankIdx + 1}`;
+                
+                item.innerHTML = `
+                    <div class="leaderboard-rank">${medal}</div>
+                    <div class="leaderboard-name">${player.name}</div>
+                    <div class="leaderboard-score">${player.score} pts</div>
+                `;
+                InsertionContainer.appendChild(item);
+            });
+
+            playSynthesizedAudio('victory');
             switchActiveView('view-end');
         }
 
-        // Physical enter keys hooking for standalone desktop testers
         document.getElementById('game-input').addEventListener('keypress', event => {
             if(event.key === 'Enter') submitGuessedAnswer();
         });
-
-        syncDashboardData();
     </script>
 </body>
 </html>
