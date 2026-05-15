@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bible Blitz: Arena Edition</title>
-    <!-- Include PeerJS library natively via unpkg CDN -->
+    <title>Bible Blitz Ultra: Master Edition</title>
+    <!-- Public CDN framework injection for decentralized multi-device signaling loops -->
     <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
     <style>
         :root {
@@ -21,84 +21,260 @@
             --gold: #fbbf24;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent;}
-        body, html { height: 100%; width: 100%; background: #0f172a; color: var(--text-main); overflow: hidden; display: flex; justify-content: center; align-items: center; }
-        .bg-mesh { position: fixed; inset: 0; background: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.18) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%), radial-gradient(at 50% 50%, rgba(15, 23, 42, 1) 0px, #0f172a 100%); z-index: -2; }
-        
-        .app-shell { width: 90%; max-width: 430px; background: var(--surface); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid var(--border); border-radius: 36px; padding: 35px 25px; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7); max-height: 90vh; overflow-y: auto; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            background: #0f172a;
+            color: var(--text-main);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 🧿 Ambient Background Mesh */
+        .bg-mesh {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.18) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(15, 23, 42, 1) 0px, #0f172a 100%);
+            z-index: -2;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* 🎬 Cinematic App Intro Screen */
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            background: #020617;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+
+        .logo-container { text-align: center; }
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            background: linear-gradient(to right, #ffffff, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cinematicFade 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes cinematicFade {
+            0% { opacity: 0; transform: translateY(20px); letter-spacing: 0.3em; }
+            40% { opacity: 1; transform: translateY(0); }
+            70% { opacity: 1; transform: translateY(0); letter-spacing: 0.15em; }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* 🎨 Universal Premium App Shell */
+        .app-shell {
+            width: 90%;
+            max-width: 430px;
+            background: var(--surface);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            border-radius: 36px;
+            padding: 35px 25px;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+            transform: translateY(40px);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .app-shell.active { transform: translateY(0); opacity: 1; }
+
+        /* 🔐 Secret Mode Dynamic Injection Styling */
+        .app-shell.secret-active {
+            border-color: var(--gold) !important;
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.15), 0 25px 60px -15px rgba(0,0,0,0.8);
+        }
+        .app-shell.secret-active .puzzle-display {
+            color: var(--gold) !important;
+            filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.6));
+        }
+
         .view { display: flex; flex-direction: column; }
         .hidden { display: none !important; }
+
         h1 { font-size: 1.8rem; font-weight: 800; text-align: center; letter-spacing: -0.5px; }
         .subtitle { color: var(--text-sub); text-align: center; font-size: 0.9rem; margin-bottom: 25px; }
 
-        .btn { width: 100%; padding: 16px; border-radius: 18px; border: none; background: var(--primary); color: white; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 10px;}
-        .btn:active { transform: scale(0.97); }
-        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-success { background: var(--success); }
+        /* Interface Layout Elements */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 18px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+        }
+        .btn:active { transform: scale(0.96); opacity: 0.9; }
+        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); box-shadow: none; }
+        .btn-success { background: var(--success); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25); }
+        .btn-next { background: var(--text-main); color: #0f172a; box-shadow: none; }
 
-        .section-label { font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; margin: 15px 0 8px 4px; letter-spacing: 1px; }
+        .section-label { font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; margin: 20px 0 8px 4px; letter-spacing: 1px; }
         .grid-select { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .cat-grid { grid-template-columns: repeat(2, 1fr); }
-        .pill-btn { padding: 12px 6px; border: 1px solid var(--border); background: var(--surface-accent); border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85rem; color: var(--text-main); }
-        .pill-btn.active { border-color: var(--primary); background: rgba(99, 102, 241, 0.2); }
+        
+        .pill-btn {
+            padding: 14px 10px;
+            border: 1px solid var(--border);
+            background: var(--surface-accent);
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+        .pill-btn.active { border-color: var(--primary); background: rgba(99, 102, 241, 0.2); color: white; }
 
-        input { width: 100%; background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border); padding: 16px; border-radius: 18px; color: white; font-size: 1.1rem; font-weight: 700; text-align: center; outline: none; margin-bottom: 12px; }
-        input:focus { border-color: var(--primary); }
-
-        .hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: 800; font-size: 0.85rem; }
+        /* HUD Layout Metrics */
+        .hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.5px; }
+        .lives { color: var(--error); letter-spacing: 2px; }
+        .streak-pill { background: var(--warning); color: #000; padding: 4px 12px; border-radius: 100px; font-weight: 900; font-size: 0.75rem; }
+        
         .timer-track { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 100px; margin-bottom: 20px; overflow: hidden; }
         .timer-bar { width: 100%; height: 100%; background: var(--primary); transform-origin: left; transition: transform 0.1s linear; }
-        
-        .puzzle-display { font-size: 2.5rem; font-weight: 900; margin: 20px 0; text-align: center; letter-spacing: 4px; text-transform: uppercase; min-height: 60px; display: flex; justify-content: center; align-items: center;}
-        .emoji-mode-text { font-size: 2.2rem; letter-spacing: 0px !important; }
-        
-        .feedback { text-align: center; font-weight: 700; min-height: 24px; margin-top: 10px; }
 
-        .room-badge { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 16px; text-align: center; font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; border: 1px dashed var(--border); }
-        .lobby-list { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 16px; min-height: 60px; margin-bottom: 15px; font-size: 0.9rem;}
-        .leaderboard-item { display: flex; justify-content: space-between; background: var(--surface-accent); padding: 12px 16px; border-radius: 14px; margin-bottom: 8px; border: 1px solid var(--border); font-weight: 700;}
+        .puzzle-display {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin: 25px 0;
+            text-align: center;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.4));
+            min-height: 65px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .emoji-mode-text { font-size: 2.2rem; letter-spacing: 0px !important; }
+
+        input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: 18px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        input:focus { background: rgba(255, 255, 255, 0.12); border-color: var(--primary); }
+
+        .feedback { text-align: center; font-weight: 700; min-height: 24px; margin-top: 15px; font-size: 0.95rem; }
+
+        /* Summary Dashboard and Ledger Components */
+        .stats-summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .stat-node { background: var(--surface-accent); padding: 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03); text-align: center; }
+        .stat-val { font-size: 1.5rem; font-weight: 900; color: var(--primary); display: block; }
+        .stat-lbl { font-size: 0.65rem; color: var(--text-sub); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Lobby and P2P Scoreboard Elements */
+        .room-badge { background: rgba(255,255,255,0.05); padding: 14px; border-radius: 16px; text-align: center; font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; border: 1px dashed var(--border); }
+        .lobby-list { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 16px; min-height: 60px; margin-bottom: 15px; font-size: 0.9rem; }
+        .leaderboard-item { display: flex; justify-content: space-between; background: var(--surface-accent); padding: 14px 16px; border-radius: 16px; margin-bottom: 8px; border: 1px solid var(--border); font-weight: 700; }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+        .shake { animation: shake 0.25s cubic-bezier(.36,.07,.19,.97) both; }
     </style>
 </head>
 <body>
 
     <div class="bg-mesh"></div>
+    <canvas id="bg-canvas"></canvas>
 
-    <div class="app-shell">
+    <!-- 🎬 Intro Screen Overlay -->
+    <div id="intro-screen">
+        <div class="logo-container">
+            <div class="logo-text">BIBLE BLITZ</div>
+        </div>
+    </div>
+
+    <!-- 🎨 Universal App Wrapper -->
+    <div class="app-shell" id="app-shell">
         
-        <!-- 🏠 VIEW: NETWORK DASHBOARD -->
+        <!-- 🏠 VIEW: CENTRAL ANALYTICS DASHBOARD -->
         <div id="view-dash" class="view">
-            <h1>Bible Blitz Arena</h1>
-            <p class="subtitle">Multi-Device Wireless Arcade</p>
+            <h1>Bible Blitz Ultra</h1>
+            <p class="subtitle">Premium Scriptural Enigma Game</p>
 
-            <input type="text" id="player-profile-name" placeholder="Enter Your Nickname" value="Believer">
-            
-            <button class="btn" onclick="initiateNetworkHost()">Create New Room</button>
-            
-            <div class="section-label">Or Join Existing Room</div>
-            <input type="text" id="join-room-id-input" placeholder="Paste Room ID (e.g. BB-1234)">
-            <button class="btn btn-secondary" onclick="joinNetworkRoom()">Connect to Room</button>
+            <div class="stats-summary">
+                <div class="stat-node"><span class="stat-val" id="dash-games">0</span><span class="stat-lbl">Campaigns</span></div>
+                <div class="stat-node"><span class="stat-val" id="dash-streak" style="color:var(--warning);">0</span><span class="stat-lbl">Daily Streak</span></div>
+            </div>
+
+            <div id="secret-notice" style="text-align: center; font-size: 0.75rem; font-weight: 800; color: var(--gold); margin-bottom: 10px;" class="hidden">👑 ELITE SECRET MODE UNLOCKED</div>
+
+            <input type="text" id="player-profile-name" placeholder="Your Nickname" value="Believer">
+
+            <button class="btn" onclick="initiateLocalSoloGame()">Launch Solo Game</button>
+            <button class="btn btn-secondary" onclick="enterNetworkLobbyView()">Multi-Device Arena</button>
+            <button class="btn btn-secondary" onclick="switchActiveView('view-stats')">Analytics Ledger</button>
         </div>
 
-        <!-- ⏳ VIEW: LOBBY -->
+        <!-- ⏳ VIEW: LOBBY SETUP SUITE -->
         <div id="view-lobby" class="view hidden">
-            <h1>Game Lobby</h1>
-            <p class="subtitle" id="lobby-status-text">Creating secure network bridge...</p>
+            <h1>Match Lobby</h1>
+            <p class="subtitle" id="lobby-status-text">Creating arena instance...</p>
             
             <div class="room-badge">ROOM ID: <span id="lobby-room-display" style="color:var(--gold)">----</span></div>
             
-            <div class="section-label">Connected Competitors</div>
-            <div class="lobby-list" id="lobby-players-list">Waiting for connection...</div>
+            <div class="section-label">Connected Players</div>
+            <div class="lobby-list" id="lobby-players-list">Awaiting connections...</div>
 
-            <!-- Host Settings Configuration Options -->
+            <!-- Host Setting Constraints Panel -->
             <div id="host-settings-panel" class="hidden">
-                <div class="section-label">Game Engine Mode</div>
+                <div class="section-label">Engine Variant Mode</div>
                 <div class="grid-select cat-grid" style="margin-bottom: 15px;">
                     <button class="pill-btn active" data-type="gmode" onclick="setPreference('gmode', 'scramble', this)">Scramble Words</button>
                     <button class="pill-btn" data-type="gmode" onclick="setPreference('gmode', 'emoji', this)">Emoji Decoding</button>
                 </div>
 
                 <div id="scramble-settings">
-                    <div class="section-label">Difficulty Settings</div>
+                    <div class="section-label">Difficulty Category</div>
                     <div class="grid-select">
                         <button class="pill-btn active" data-type="diff" onclick="setPreference('diff', 'easy', this)">Easy</button>
                         <button class="pill-btn" data-type="diff" onclick="setPreference('diff', 'medium', this)">Medium</button>
@@ -106,17 +282,19 @@
                     </div>
                 </div>
                 
-                <button class="btn btn-success" style="margin-top: 25px;" onclick="broadcastStartSignal()">Start Arena Match</button>
+                <button class="btn btn-success" style="margin-top: 20px;" onclick="broadcastStartSignal()">Start Arena Session</button>
             </div>
             
-            <p id="client-wait-msg" class="subtitle hidden" style="margin-top:15px; color:var(--warning)">Waiting for host to signal start...</p>
+            <p id="client-wait-msg" class="subtitle hidden" style="margin-top:15px; color:var(--warning)">Waiting for Host to begin...</p>
+            <button class="btn btn-secondary" onclick="disconnectNetworkSession()">Disconnect</button>
         </div>
 
-        <!-- 🎮 VIEW: ACTIVE GAMEPLAY LOOP -->
+        <!-- 🎮 VIEW: LIVE GAMEPLAY LOOP -->
         <div id="view-game" class="view hidden">
             <div class="hud">
                 <div>SCORE: <span id="game-score">0</span></div>
-                <div>ROUND: <span id="game-round-counter">1/5</span></div>
+                <div id="game-streak-pill" class="streak-pill hidden">🔥 <span id="game-streak-val">0</span></div>
+                <div class="lives" id="game-lives">❤️❤️❤️</div>
             </div>
 
             <div class="timer-track">
@@ -124,28 +302,43 @@
             </div>
 
             <div class="puzzle-display" id="puzzle-render-target">----</div>
-            <input type="text" id="game-input" placeholder="Type solution..." spellcheck="false" autocomplete="off">
+            <input type="text" id="game-input" placeholder="Deduce target..." spellcheck="false" autocomplete="off">
             <button class="btn" id="game-action-btn" onclick="submitGuessedAnswer()">Validate</button>
             <div class="feedback" id="game-feedback"></div>
         </div>
 
-        <!-- 🏁 VIEW: SCOREBOARD / ARENA WRAP -->
+        <!-- 🏁 VIEW: FINAL ARENA SCOREBOARD / REPORT SUMMARY -->
         <div id="view-end" class="view hidden">
-            <h1>Match Standings</h1>
-            <p class="subtitle">Live multi-device network leaderboard</p>
+            <h1 id="end-title">Session Wrap</h1>
+            <p class="subtitle">Dynamic multi-device scoreboard standings</p>
 
-            <div id="final-leaderboard-list"></div>
+            <div id="final-leaderboard-list" style="margin-bottom: 20px;"></div>
 
-            <button class="btn" onclick="window.location.reload()">Exit Arena</button>
+            <button class="btn" onclick="returnToDashboardHome()">Return to Main View</button>
+        </div>
+
+        <!-- 📊 VIEW: GENERAL STATISTICAL LEDGER -->
+        <div id="view-stats" class="view hidden">
+            <h1>Performance Ledger</h1>
+            <p class="subtitle">Permanent System Metrics</p>
+
+            <div class="stats-summary">
+                <div class="stat-node"><span class="stat-val" id="stat-accuracy">0%</span><span class="stat-lbl">Accuracy</span></div>
+                <div class="stat-node"><span class="stat-val" id="stat-best-streak" style="color:var(--warning);">0</span><span class="stat-lbl">Peak Streak</span></div>
+                <div class="stat-node"><span class="stat-val" id="stat-correct" style="color:var(--success);">0</span><span class="stat-lbl">Correct answers</span></div>
+                <div class="stat-node"><span class="stat-val" id="stat-wrong" style="color:var(--error);">0</span><span class="stat-lbl">Failures</span></div>
+            </div>
+
+            <button class="btn" onclick="switchActiveView('view-dash')">Go Back</button>
         </div>
     </div>
 
     <script>
-        // 🧩 DATA DICTIONARIES
+        // 🧩 ENGINES CORE VOCABULARY DICTIONARIES 
         const SCRAMBLE_DICTIONARY = {
             easy: ["Peter", "Mary", "Ruth", "Noah", "David", "Adam", "Eve", "John", "Mark", "Paul", "Isaac"],
-            medium: ["Elizabeth", "Abraham", "Elijah", "Lazarus", "Gideon", "Samson", "Deborah", "Solomon", "Esther"],
-            hard: ["Nebuchadnezzar", "Melchizedek", "Methuselah", "Hezekiah", "Sennacherib", "Zerubbabel", "Mephibosheth"]
+            medium: ["Elizabeth", "Abraham", "Elijah", "Lazarus", "Gideon", "Samson", "Deborah", "Solomon", "Esther", "Samuel"],
+            hard: ["Nebuchadnezzar", "Melchizedek", "Methuselah", "Hezekiah", "Sennacherib", "Zerubbabel", "Jehoiakim", "Mephibosheth"]
         };
 
         const EMOJI_DICTIONARY = [
@@ -163,14 +356,99 @@
             { puzzle: "🪔🪔", answers: ["gideon", "ten virgins", "parable of the ten virgins"] }
         ];
 
-        let myProfile = { name: "Player", id: null, isHost: false, score: 0 };
+        // ⚙️ SYSTEM CORE VARIABLE STATES
         let activePrefs = { diff: 'easy', gmode: 'scramble' };
+        let myProfile = { name: "Player", id: null, isHost: false, isNetworkMode: false };
+        
+        let liveSession = { pool: [], index: 0, score: 0, speedBonus: 0, streak: 0, lives: 3, timeLeft: 100, lockTurn: false, gameMode: 'scramble' };
+        let coreSystemClock = null;
+        let isSecretUnlocked = localStorage.getItem('scramble_secret') === 'true';
+
+        // 📡 COMMUNICATIONS CHANNELS CACHING
         let peerInstance = null;
         let networkConnections = [];
         let peerScoresCache = {};
-        
-        let liveSession = { pool: [], index: 0, score: 0, timeLeft: 100, lockTurn: false, gameMode: 'scramble' };
-        let coreSystemClock = null;
+
+        // 💾 PERSISTED LOCAL DISK STORAGE CONFIG
+        let savedStore = JSON.parse(localStorage.getItem('scramble_System_Data')) || {
+            games: 0, correct: 0, wrong: 0, topStreak: 0, dailyStreak: 0, timestamp: null
+        };
+
+        // 🎬 MULTI-PLATFORM LIFE CYCLE LOADER
+        window.onload = () => {
+            initBackgroundParticles();
+            setTimeout(() => {
+                document.getElementById('intro-screen').style.transform = 'translateY(-100%)';
+                setTimeout(() => {
+                    document.getElementById('app-shell').classList.add('active');
+                    if(isSecretUnlocked) enableSecretGraphics();
+                }, 400);
+            }, 2200);
+        };
+
+        // 🧿 BACKGROUND PARTICLES SYSTEM
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particleArray = [];
+
+        function initBackgroundParticles() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            particleArray = [];
+            for(let i=0; i<35; i++) {
+                particleArray.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2.5 + 0.5,
+                    speedY: Math.random() * 0.4 + 0.1,
+                    alpha: Math.random() * 0.4 + 0.1
+                });
+            }
+            renderParticleLoop();
+        }
+
+        function renderParticleLoop() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            for(let i=0; i<particleArray.length; i++) {
+                let p = particleArray[i];
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                p.y -= p.speedY; if(p.y < 0) p.y = canvas.height;
+            }
+            requestAnimationFrame(renderParticleLoop);
+        }
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // 🎵 PROGRAMMATIC PLATFORM OSCILLATOR AUDIO
+        function playAudioTone(flavor) {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+
+                if (flavor === 'right') {
+                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.08);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.22);
+                } else if (flavor === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.22);
+                } else if (flavor === 'victory') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.08);
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.16);
+                    osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.24);
+                    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.45);
+                }
+            } catch(e) { console.log("Audio block context prevented."); }
+        }
+
+        function invokeHapticFeedback(pattern) { if (navigator.vibrate) navigator.vibrate(pattern); }
 
         function calculateScramble(word) {
             let arr = word.toUpperCase().split(''), i = arr.length;
@@ -184,160 +462,220 @@
             element.classList.add('active');
 
             if (category === 'gmode') {
-                const settingSubPanel = document.getElementById('scramble-settings');
-                if (value === 'emoji') settingSubPanel.classList.add('hidden');
-                else settingSubPanel.classList.remove('hidden');
+                const scrambleSubPanel = document.getElementById('scramble-settings');
+                if (value === 'emoji') scrambleSubPanel.classList.add('hidden');
+                else scrambleSubPanel.classList.remove('hidden');
             }
         }
 
-        function switchView(id) {
+        function switchActiveView(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(viewId).classList.remove('hidden');
+            if(viewId === 'view-dash') syncDashboardData();
+            if(viewId === 'view-stats') syncLedgerData();
         }
 
-        // 📡 HOST NETWORK PIPELINE
-        function initiateNetworkHost() {
-            myProfile.name = document.getElementById('player-profile-name').value.trim() || "Host";
-            myProfile.isHost = true;
-            
-            const randomId = "BB-" + Math.floor(1000 + Math.random() * 9000);
-            peerInstance = new Peer(randomId);
-
-            peerInstance.on('open', (id) => {
-                myProfile.id = id;
-                document.getElementById('lobby-room-display').textContent = id;
-                document.getElementById('lobby-status-text').textContent = "Waiting for players to connect...";
-                document.getElementById('host-settings-panel').classList.remove('hidden');
-                peerScoresCache[myProfile.name] = 0;
-                updateLobbyListUI();
-                switchView('view-lobby');
-            });
-
-            peerInstance.on('connection', (conn) => {
-                networkConnections.push(conn);
-                setupDataEventChannels(conn);
-            });
+        // 📊 STORAGE SYNC PIPELINES
+        function syncDashboardData() {
+            evaluateDailyStreakTracking();
+            document.getElementById('dash-games').textContent = savedStore.games;
+            document.getElementById('dash-streak').textContent = savedStore.dailyStreak;
         }
 
-        // 🔗 CLIENT JOIN PIPELINE
-        function joinNetworkRoom() {
-            const targetRoomId = document.getElementById('join-room-id-input').value.trim().toUpperCase();
-            myProfile.name = document.getElementById('player-profile-name').value.trim() || "Guest";
+        function syncLedgerData() {
+            const total = savedStore.correct + savedStore.wrong;
+            const absolutePct = total === 0 ? 0 : Math.round((savedStore.correct / total) * 100);
+            document.getElementById('stat-accuracy').textContent = absolutePct + "%";
+            document.getElementById('stat-best-streak').textContent = savedStore.topStreak;
+            document.getElementById('stat-correct').textContent = savedStore.correct;
+            document.getElementById('stat-wrong').textContent = savedStore.wrong;
+        }
+
+        function evaluateDailyStreakTracking() {
+            const now = new Date();
+            if (savedStore.timestamp) {
+                const lastDate = new Date(savedStore.timestamp);
+                const elapsedDays = Math.ceil(Math.abs(now - lastDate) / (1000 * 60 * 60 * 24));
+                if (elapsedDays > 1) savedStore.dailyStreak = 0;
+            }
+            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
+        }
+
+        // 🕹️ GAMEPLAY CONFIGURATOR LAUNCHERS
+        function initiateLocalSoloGame() {
+            myProfile.name = document.getElementById('player-profile-name').value.trim() || "Champion";
+            myProfile.isNetworkMode = false;
             myProfile.isHost = false;
 
-            if(!targetRoomId) return alert("Please enter a valid Room ID.");
-            peerInstance = new Peer();
+            let sourceWords = SCRAMBLE_DICTIONARY[activePrefs.diff];
+            let targetPool = sourceWords.map(w => ({ display: calculateScramble(w), solutions: [w.toLowerCase()] })).sort(() => Math.random() - 0.5).slice(0, 5);
             
-            peerInstance.on('open', () => {
-                const conn = peerInstance.connect(targetRoomId);
-                networkConnections.push(conn);
-                setupDataEventChannels(conn);
-                
-                document.getElementById('lobby-room-display').textContent = targetRoomId;
-                document.getElementById('lobby-status-text').textContent = "Connecting to Host...";
-                document.getElementById('client-wait-msg').classList.remove('hidden');
-                switchView('view-lobby');
-            });
+            liveSession.pool = targetPool;
+            liveSession.gameMode = 'scramble';
+            
+            savedStore.games++;
+            savedStore.timestamp = new Date().getTime();
+            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
+
+            launchCommonGameplaySequence();
         }
 
-        // ⚡ MULTI-DEVICE DATA EXCHANGE HUB
-        function setupDataEventChannels(conn) {
+        function enterNetworkLobbyView() {
+            myProfile.name = document.getElementById('player-profile-name').value.trim() || "Seeker";
+            myProfile.isNetworkMode = true;
+            
+            const promptId = prompt("To Join a Match Room, paste the Room ID code here. To Host a New Room instead, leave this blank and press OK:");
+            
+            if (promptId === null) return; // Action cancelled
+            let targetedId = promptId.trim().toUpperCase();
+
+            if (targetedId === "") {
+                // Host Operations setup
+                myProfile.isHost = true;
+                const generatedRoomCode = "BB-" + Math.floor(1000 + Math.random() * 9000);
+                peerInstance = new Peer(generatedRoomCode);
+
+                peerInstance.on('open', (id) => {
+                    document.getElementById('lobby-room-display').textContent = id;
+                    document.getElementById('lobby-status-text').textContent = "Waiting for players to connect...";
+                    document.getElementById('host-settings-panel').classList.remove('hidden');
+                    peerScoresCache[myProfile.name] = 0;
+                    updateLobbyListUI();
+                    switchActiveView('view-lobby');
+                });
+
+                peerInstance.on('connection', (conn) => {
+                    networkConnections.push(conn);
+                    setupNetworkDataChannels(conn);
+                });
+            } else {
+                // Client Operations setup
+                myProfile.isHost = false;
+                peerInstance = new Peer();
+
+                peerInstance.on('open', () => {
+                    const conn = peerInstance.connect(targetedId);
+                    networkConnections.push(conn);
+                    setupNetworkDataChannels(conn);
+                    
+                    document.getElementById('lobby-room-display').textContent = targetedId;
+                    document.getElementById('lobby-status-text').textContent = "Connecting to Host device...";
+                    document.getElementById('client-wait-msg').classList.remove('hidden');
+                    document.getElementById('host-settings-panel').classList.add('hidden');
+                    switchActiveView('view-lobby');
+                });
+            }
+        }
+
+        // 📡 PEER-TO-PEER DATA NETWORKING LINK
+        function setupNetworkDataChannels(conn) {
             conn.on('open', () => {
-                if(!myProfile.isHost) {
-                    conn.send({ type: 'HANDSHAKE', name: myProfile.name });
-                }
+                if(!myProfile.isHost) conn.send({ type: 'HANDSHAKE', name: myProfile.name });
             });
 
             conn.on('data', (data) => {
                 if (data.type === 'HANDSHAKE' && myProfile.isHost) {
                     peerScoresCache[data.name] = 0;
                     updateLobbyListUI();
-                    broadcastNetworkPayload({ type: 'LOBBY_UPDATE', list: Object.keys(peerScoresCache) });
+                    broadcastPayload({ type: 'LOBBY_UPDATE', list: Object.keys(peerScoresCache) });
                 }
                 if (data.type === 'LOBBY_UPDATE') updateLobbyListUI(data.list);
                 
                 if (data.type === 'START_GAME') {
                     liveSession.pool = data.pool;
                     liveSession.gameMode = data.mode;
-                    launchGameplaySequence();
+                    launchCommonGameplaySequence();
                 }
                 if (data.type === 'SCORE_UPDATE') {
                     peerScoresCache[data.name] = data.score;
-                    updateLeaderboardUI();
+                    if(document.getElementById('view-end').classList.contains('hidden') === false) updateFinalLeaderboardUI();
                 }
             });
         }
 
-        function broadcastNetworkPayload(payload) {
+        function broadcastPayload(payload) {
             networkConnections.forEach(conn => { if(conn.open) conn.send(payload); });
         }
 
         function updateLobbyListUI(suppliedList) {
             const container = document.getElementById('lobby-players-list');
             const targetList = suppliedList || Object.keys(peerScoresCache);
-            container.innerHTML = targetList.map(name => `<div style="padding:4px 0">👤 ${name}</div>`).join('');
+            container.innerHTML = targetList.map(name => `<div style="padding:6px 0; font-weight:700">👤 ${name}</div>`).join('');
         }
 
-        // 🚀 GAMEPLAY LOOP CONTROLLER
         function broadcastStartSignal() {
             let structuredPool = [];
-            
             if (activePrefs.gmode === 'scramble') {
                 let sourceWords = SCRAMBLE_DICTIONARY[activePrefs.diff];
                 structuredPool = sourceWords.map(w => ({ display: calculateScramble(w), solutions: [w.toLowerCase()] })).sort(() => Math.random() - 0.5).slice(0, 5);
             } else {
-                // Emoji Mode Pipeline
                 structuredPool = EMOJI_DICTIONARY.map(item => ({ display: item.puzzle, solutions: item.answers })).sort(() => Math.random() - 0.5).slice(0, 6);
             }
             
-            broadcastNetworkPayload({ type: 'START_GAME', pool: structuredPool, mode: activePrefs.gmode });
+            broadcastPayload({ type: 'START_GAME', pool: structuredPool, mode: activePrefs.gmode });
             liveSession.pool = structuredPool;
             liveSession.gameMode = activePrefs.gmode;
-            launchGameplaySequence();
+            launchCommonGameplaySequence();
         }
 
-        function launchGameplaySequence() {
+        // 🎮 UNIVERSAL ENGINE RUNTIME INTERFACE
+        function launchCommonGameplaySequence() {
             liveSession.index = 0;
             liveSession.score = 0;
-            switchView('view-game');
+            liveSession.speedBonus = 0;
+            liveSession.streak = 0;
+            liveSession.lives = 3;
+            switchActiveView('view-game');
+            syncHUD();
             displayCurrentRound();
         }
 
-        function displayCurrentRound() {
-            if(liveSession.index >= liveSession.pool.length) {
-                switchView('view-end');
-                return;
+        function syncHUD() {
+            document.getElementById('game-score').textContent = liveSession.score;
+            document.getElementById('game-lives').textContent = myProfile.isNetworkMode ? `⏱️ Match Track` : "❤️".repeat(liveSession.lives);
+            const pill = document.getElementById('game-streak-pill');
+            if (liveSession.streak > 0) {
+                pill.classList.remove('hidden');
+                document.getElementById('game-streak-val').textContent = liveSession.streak;
+            } else {
+                pill.classList.add('hidden');
             }
-            liveSession.lockTurn = false;
-            document.getElementById('game-round-counter').textContent = `${liveSession.index + 1}/${liveSession.pool.length}`;
-            
-            const renderBox = document.getElementById('puzzle-render-target');
-            renderBox.textContent = liveSession.pool[liveSession.index].display;
-            
-            if (liveSession.gameMode === 'emoji') renderBox.classList.add('emoji-mode-text');
-            else renderBox.classList.remove('emoji-mode-text');
-            
-            const input = document.getElementById('game-input');
-            input.value = ""; input.disabled = false; input.focus();
-            
-            document.getElementById('game-action-btn').textContent = "Validate";
-            document.getElementById('game-feedback').textContent = "";
-            
-            executeTimer();
         }
 
-        function executeTimer() {
+        function displayCurrentRound() {
+            if(liveSession.index >= liveSession.pool.length || (!myProfile.isNetworkMode && liveSession.lives <= 0)) {
+                return compileFinalReport();
+            }
+            liveSession.lockTurn = false;
+            
+            const renderTarget = document.getElementById('puzzle-render-target');
+            renderTarget.textContent = liveSession.pool[liveSession.index].display;
+            
+            if (liveSession.gameMode === 'emoji') renderTarget.classList.add('emoji-mode-text');
+            else renderTarget.classList.remove('emoji-mode-text');
+
+            const txtIn = document.getElementById('game-input');
+            txtIn.value = ""; txtIn.disabled = false; txtIn.focus();
+            
+            document.getElementById('game-action-btn').textContent = "Validate";
+            document.getElementById('game-action-btn').className = "btn";
+            document.getElementById('game-feedback').textContent = "";
+            
+            executeChronographTimer();
+        }
+
+        function executeChronographTimer() {
             clearInterval(coreSystemClock);
             liveSession.timeLeft = 100;
             const bar = document.getElementById('game-timer');
-            let reductionRate = liveSession.gameMode === 'emoji' ? 0.8 : 1.5; // Give more thinking time for visuals
-            
+            let reductionRate = liveSession.gameMode === 'emoji' ? 0.9 : 1.6;
+
             coreSystemClock = setInterval(() => {
                 liveSession.timeLeft -= reductionRate;
                 if(liveSession.timeLeft <= 0) {
                     liveSession.timeLeft = 0;
                     clearInterval(coreSystemClock);
-                    evaluateAnswer(true);
+                    evaluateSubmissionData(true);
                 }
                 bar.style.transform = `scaleX(${liveSession.timeLeft / 100})`;
             }, 100);
@@ -349,51 +687,129 @@
                 displayCurrentRound();
                 return;
             }
-            evaluateAnswer(false);
+            evaluateSubmissionData(false);
         }
 
-        function evaluateAnswer(timeout) {
+        function evaluateSubmissionData(timeout) {
             clearInterval(coreSystemClock);
             liveSession.lockTurn = true;
             
-            const input = document.getElementById('game-input');
-            let guess = input.value.trim().toLowerCase();
-            let currentRoundData = liveSession.pool[liveSession.index];
-            
-            let isCorrect = !timeout && currentRoundData.solutions.includes(guess);
+            const inputField = document.getElementById('game-input');
+            let baseGuess = inputField.value.trim().toLowerCase();
+            let roundInstanceData = liveSession.pool[liveSession.index];
+
+            let isCorrect = !timeout && roundInstanceData.solutions.includes(baseGuess);
 
             if (isCorrect) {
-                let points = 10 + Math.round(liveSession.timeLeft / 10);
-                liveSession.score += points;
-                document.getElementById('game-feedback').innerHTML = `<span style="color:var(--success)">✨ Correct! +${points} pts</span>`;
+                liveSession.score += 10;
+                savedStore.correct++;
+                liveSession.streak++;
+                if(liveSession.streak > savedStore.topStreak) savedStore.topStreak = liveSession.streak;
+
+                let pointsBonus = 0;
+                if(liveSession.timeLeft > 50) {
+                    pointsBonus = Math.round((liveSession.timeLeft - 50) / 8);
+                    liveSession.speedBonus += pointsBonus;
+                    liveSession.score += pointsBonus;
+                }
+
+                invokeHapticFeedback(40);
+                playAudioTone('right');
+                document.getElementById('game-feedback').innerHTML = `<span style="color:var(--success)">✨ Confirmed! Perfect Calculation!</span>`;
             } else {
-                let primarySolution = currentRoundData.solutions[0].toUpperCase();
-                document.getElementById('game-feedback').innerHTML = `<span style="color:var(--error)">❌ Deficit! Answer: ${primarySolution}</span>`;
+                liveSession.lives--;
+                liveSession.streak = 0;
+                savedStore.wrong++;
+
+                invokeHapticFeedback([90, 40, 90]);
+                playAudioTone('wrong');
+                
+                const shell = document.getElementById('app-shell');
+                shell.classList.add('shake'); setTimeout(() => shell.classList.remove('shake'), 300);
+
+                let primaryAnswer = roundInstanceData.solutions[0].toUpperCase();
+                document.getElementById('game-feedback').innerHTML = `<span style="color:var(--error)">❌ Deficit! Solution: ${primaryAnswer}</span>`;
             }
 
-            document.getElementById('game-score').textContent = liveSession.score;
-            input.disabled = true;
-            document.getElementById('game-action-btn').textContent = "Next Round";
-            
-            // Sync scores across device network immediately
-            peerScoresCache[myProfile.name] = liveSession.score;
-            broadcastNetworkPayload({ type: 'SCORE_UPDATE', name: myProfile.name, score: liveSession.score });
-            updateLeaderboardUI();
+            inputField.disabled = true;
+            syncHUD();
+
+            document.getElementById('game-action-btn').textContent = "Proceed";
+            document.getElementById('game-action-btn').className = "btn btn-next";
+
+            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
+            verifyScoreUnlocks();
+
+            if (myProfile.isNetworkMode) {
+                peerScoresCache[myProfile.name] = liveSession.score;
+                broadcastPayload({ type: 'SCORE_UPDATE', name: myProfile.name, score: liveSession.score });
+            }
         }
 
-        function updateLeaderboardUI() {
-            const container = document.getElementById('final-leaderboard-list');
-            const sortedPlayers = Object.entries(peerScoresCache).sort((a, b) => b[1] - a[1]);
+        function verifyScoreUnlocks() {
+            if(liveSession.score >= 110 && !isSecretUnlocked) {
+                isSecretUnlocked = true;
+                localStorage.setItem('scramble_secret', 'true');
+                enableSecretGraphics();
+            }
+        }
+
+        function enableSecretGraphics() {
+            document.getElementById('app-shell').classList.add('secret-active');
+            const notice = document.getElementById('secret-notice');
+            if(notice) notice.classList.remove('hidden');
+        }
+
+        function compileFinalReport() {
+            clearInterval(coreSystemClock);
             
-            container.innerHTML = sortedPlayers.map(([name, score], idx) => `
-                <div class="leaderboard-item">
-                    <span>${idx === 0 ? '👑' : '👤'} ${name}</span>
-                    <span style="color:var(--success)">${score} pts</span>
-                </div>
-            `).join('');
+            if(!myProfile.isNetworkMode && liveSession.score > 20) {
+                const lastDayStr = savedStore.timestamp ? new Date(savedStore.timestamp).toDateString() : null;
+                if(lastDayStr !== new Date().toDateString()) savedStore.dailyStreak++;
+                localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
+            }
+
+            document.getElementById('end-title').textContent = (!myProfile.isNetworkMode && liveSession.lives <= 0) ? "Session Defeat" : "Arena Concluded";
+            
+            updateFinalLeaderboardUI();
+            switchActiveView('view-end');
+            playAudioTone('victory');
+        }
+
+        function updateFinalLeaderboardUI() {
+            const container = document.getElementById('final-leaderboard-list');
+            if(!container) return;
+
+            if (myProfile.isNetworkMode) {
+                const sorted = Object.entries(peerScoresCache).sort((a,b) => b[1] - a[1]);
+                container.innerHTML = sorted.map(([name, val], idx) => `
+                    <div class="leaderboard-item">
+                        <span>${idx === 0 ? '👑' : '👤'} ${name}</span>
+                        <span style="color:var(--success)">${val} pts</span>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = `
+                    <div class="leaderboard-item"><span>👤 Base Score</span><span style="color:var(--primary)">${liveSession.score}</span></div>
+                    <div class="leaderboard-item"><span>⚡ Speed Bonus</span><span style="color:var(--success)">+${liveSession.speedBonus}</span></div>
+                `;
+            }
+        }
+
+        function disconnectNetworkSession() {
+            if(peerInstance) peerInstance.destroy();
+            returnToDashboardHome();
+        }
+
+        function returnToDashboardHome() {
+            myProfile.isNetworkMode = false;
+            networkConnections = [];
+            peerScoresCache = {};
+            switchActiveView('view-dash');
         }
 
         document.getElementById('game-input').addEventListener('keypress', e => { if(e.key === 'Enter') submitGuessedAnswer(); });
+        syncDashboardData();
     </script>
 </body>
 </html>
