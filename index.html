@@ -3,239 +3,642 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bible Blitz: Universal</title>
+    <title>Bible Blitz Ultra</title>
     <style>
         :root {
-            /* Adaptive Color Palette */
+            /* Universal Premium Dark Slate Glass Palette */
             --primary: #6366f1;
-            --accent: #f59e0b;
-            --surface: rgba(255, 255, 255, 0.15);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
+            --primary-hover: #4f46e5;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --surface: rgba(30, 41, 59, 0.45);
+            --surface-accent: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --gold: #fbbf24;
         }
 
-        /* 🎨 Universal Premium Background */
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body, html {
-            margin: 0;
-            padding: 0;
             height: 100%;
             width: 100%;
-            background: #0f172a; /* Deep Slate Base */
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            color: var(--text-primary);
+            background: #0f172a;
+            color: var(--text-main);
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* 🧿 Subtle Mesh Gradient (Android/iOS hybrid style) */
-        .bg-gradient {
+        /* 🧿 Ambient Background Mesh (OLED Friendly) */
+        .bg-mesh {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
-            z-index: -1;
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.18) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(15, 23, 42, 1) 0px, #0f172a 100%);
+            z-index: -2;
         }
 
-        /* 🎬 Cinematic Intro Screen */
+        /* ✨ Subtle Canvas Particles Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* 🎬 Cinematic App Intro Screen */
         #intro-screen {
             position: fixed;
             inset: 0;
-            background: #000;
+            background: #020617;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            transition: transform 0.8s cubic-bezier(0.87, 0, 0.13, 1);
+            transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
         }
 
+        .logo-container { text-align: center; }
         .logo-text {
             font-size: 2.5rem;
             font-weight: 900;
-            letter-spacing: 0.2em;
-            background: linear-gradient(to right, #fff, #6366f1);
+            letter-spacing: 0.3em;
+            background: linear-gradient(to right, #ffffff, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: pulse 2s infinite ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cinematicFade 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        /* 🎨 Universal Glass Card */
+        @keyframes cinematicFade {
+            0% { opacity: 0; transform: translateY(20px); letter-spacing: 0.3em; }
+            40% { opacity: 1; transform: translateY(0); }
+            70% { opacity: 1; transform: translateY(0); letter-spacing: 0.15em; }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* 🎨 Universal Premium App Shell */
         .app-shell {
             width: 90%;
-            max-width: 420px;
+            max-width: 430px;
             background: var(--surface);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 32px;
-            padding: 40px 30px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transform: translateY(30px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            border-radius: 36px;
+            padding: 35px 25px;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+            transform: translateY(40px);
             opacity: 0;
             transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
         .app-shell.active { transform: translateY(0); opacity: 1; }
 
-        /* 🎮 Game UI Elements */
-        .scrambled {
-            font-size: 3rem;
-            font-weight: 900;
-            margin: 40px 0;
-            text-align: center;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+        /* 🔐 Secret Mode Dynamic Injection Styling */
+        .app-shell.secret-active {
+            border-color: var(--gold) !important;
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.15), 0 25px 60px -15px rgba(0,0,0,0.8);
+        }
+        .app-shell.secret-active .scrambled {
+            color: var(--gold) !important;
+            filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.6));
         }
 
-        input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 20px;
-            color: white;
-            font-size: 1.2rem;
-            text-align: center;
-            outline: none;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-        }
+        /* Screen View Flow Containers */
+        .view { display: flex; flex-direction: column; }
+        .hidden { display: none !important; }
 
-        input:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
-        }
+        h1 { font-size: 1.8rem; font-weight: 800; text-align: center; letter-spacing: -0.5px; }
+        .subtitle { color: var(--text-sub); text-align: center; font-size: 0.9rem; margin-bottom: 25px; }
 
+        /* Interface Buttons */
         .btn {
             width: 100%;
-            padding: 20px;
-            border-radius: 20px;
+            padding: 18px;
+            border-radius: 18px;
             border: none;
             background: var(--primary);
             color: white;
             font-weight: 800;
             font-size: 1rem;
             cursor: pointer;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
         }
-
         .btn:active { transform: scale(0.96); opacity: 0.9; }
+        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); box-shadow: none; margin-top: 12px; }
+        .btn-next { background: var(--text-main); color: #0f172a; box-shadow: none; }
 
-        /* 🔥 Streak Badge (Material Style) */
-        .streak-pill {
-            display: inline-block;
-            background: var(--accent);
-            color: #000;
-            padding: 6px 16px;
-            border-radius: 100px;
+        /* Selection Matrices */
+        .section-label { font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; margin: 20px 0 8px 4px; letter-spacing: 1px; }
+        .grid-select { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .cat-grid { grid-template-columns: repeat(2, 1fr); }
+        
+        .pill-btn {
+            padding: 14px 10px;
+            border: 1px solid var(--border);
+            background: var(--surface-accent);
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+        .pill-btn.active { border-color: var(--primary); background: rgba(99, 102, 241, 0.2); color: white; }
+
+        /* Core HUD & Engine Metrics */
+        .hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.5px; }
+        .lives { color: var(--error); letter-spacing: 2px; }
+        .streak-pill { background: var(--warning); color: #000; padding: 4px 12px; border-radius: 100px; font-weight: 900; font-size: 0.75rem; }
+        
+        .timer-track { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 100px; margin-bottom: 30px; overflow: hidden; }
+        .timer-bar { width: 100%; height: 100%; background: var(--primary); transform-origin: left; transition: transform 0.1s linear; }
+
+        .scrambled {
+            font-size: 2.8rem;
             font-weight: 900;
-            font-size: 0.75rem;
-            margin-bottom: 20px;
+            margin: 30px 0;
+            text-align: center;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.4));
         }
 
-        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-        .hidden { display: none; }
+        input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: 18px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        input:focus { background: rgba(255, 255, 255, 0.12); border-color: var(--primary); }
 
+        .feedback { text-align: center; font-weight: 700; min-height: 24px; margin-top: 15px; font-size: 0.95rem; }
+
+        /* Analytical Data Nodes */
+        .stats-summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-node { background: var(--surface-accent); padding: 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03); text-align: center; }
+        .stat-val { font-size: 1.5rem; font-weight: 900; color: var(--primary); display: block; }
+        .stat-lbl { font-size: 0.65rem; color: var(--text-sub); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Animation Keyframe Handlers */
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+        .shake { animation: shake 0.25s cubic-bezier(.36,.07,.19,.97) both; }
     </style>
 </head>
 <body>
 
-    <div class="bg-gradient"></div>
+    <div class="bg-mesh"></div>
+    <canvas id="bg-canvas"></canvas>
 
+    <!-- 🎬 Intro Screen -->
     <div id="intro-screen">
-        <div class="logo-text">BIBLE BLITZ</div>
+        <div class="logo-container">
+            <div class="logo-text">BIBLE BLITZ</div>
+        </div>
     </div>
 
+    <!-- 🎨 Universal App Wrapper -->
     <div class="app-shell" id="app-shell">
-        <!-- Main Dashboard -->
-        <div id="dash-view">
-            <div style="text-align: center;">
-                <h1 style="margin: 0; font-size: 1.5rem;">Daily Challenge</h1>
-                <p style="color: var(--text-secondary); margin: 10px 0 30px;">Unscramble the holy names.</p>
-                <button class="btn" onclick="startGame()">Start Game</button>
+        
+        <!-- 🏠 VIEW: DASHBOARD -->
+        <div id="view-dash" class="view">
+            <h1>Bible Blitz</h1>
+            <p class="subtitle">Premium Scriptural Enigma Game</p>
+
+            <div class="stats-summary">
+                <div class="stat-node"><span class="stat-val" id="dash-games">0</span><span class="stat-lbl">Campaigns</span></div>
+                <div class="stat-node"><span class="stat-val" id="dash-streak" style="color:var(--warning);">0</span><span class="stat-lbl">Daily Streak</span></div>
             </div>
+
+            <div id="secret-notice" style="text-align: center; font-size: 0.75rem; font-weight: 800; color: var(--gold); margin-bottom: 10px;" class="hidden">👑 ELITE MODE ACCESS UNLOCKED</div>
+
+            <div class="section-label">Difficulty Settings</div>
+            <div class="grid-select">
+                <button class="pill-btn active" data-type="diff" onclick="setPreference('diff', 'easy', this)">Easy</button>
+                <button class="pill-btn" data-type="diff" onclick="setPreference('diff', 'medium', this)">Medium</button>
+                <button class="pill-btn" data-type="diff" onclick="setPreference('diff', 'hard', this)">Hard</button>
+            </div>
+
+            <div class="section-label">Category Indexes</div>
+            <div class="grid-select cat-grid">
+                <button class="pill-btn active" data-type="cat" onclick="setPreference('cat', 'all', this)">All Words</button>
+                <button class="pill-btn" data-type="cat" onclick="setPreference('cat', 'ot', this)">Old Test.</button>
+                <button class="pill-btn" data-type="cat" onclick="setPreference('cat', 'nt', this)">New Test.</button>
+                <button class="pill-btn" data-type="cat" onclick="setPreference('cat', 'women', this)">Women</button>
+            </div>
+
+            <button class="btn" style="margin-top: 25px;" onclick="startCampaignSession()">Launch Blitz</button>
+            <button class="btn btn-secondary" onclick="switchActiveView('view-stats')">Analytics Ledger</button>
         </div>
 
-        <!-- Game Area -->
-        <div id="game-view" class="hidden">
-            <div style="text-align: center;">
-                <div id="streak-badge" class="streak-pill hidden">🔥 STREAK: 0</div>
-                <div class="scrambled" id="scramble-box">----</div>
-                <input type="text" id="guess-input" placeholder="Type here..." spellcheck="false" autocomplete="off">
-                <button class="btn" onclick="checkAnswer()">Submit</button>
+        <!-- 🎮 VIEW: GAMEPLAY LOOP -->
+        <div id="view-game" class="view hidden">
+            <div class="hud">
+                <div>SCORE: <span id="game-score">0</span></div>
+                <div id="game-streak-pill" class="streak-pill hidden">🔥 <span id="game-streak-val">0</span></div>
+                <div class="lives" id="game-lives">❤️❤️❤️</div>
             </div>
+
+            <div class="timer-track">
+                <div class="timer-bar" id="game-timer"></div>
+            </div>
+
+            <div class="scrambled" id="scrambled-target">----</div>
+            <input type="text" id="game-input" placeholder="Deduce name..." spellcheck="false" autocomplete="off">
+            <button class="btn" id="game-action-btn" onclick="submitGuessedAnswer()">Validate</button>
+            <div class="feedback" id="game-feedback"></div>
+        </div>
+
+        <!-- 🏁 VIEW: GAME WRAP/REPORT CARD -->
+        <div id="view-end" class="view hidden">
+            <h1 id="end-title">Session Concluded</h1>
+            <p class="subtitle" id="end-subtitle">Analytics breakdown metrics</p>
+
+            <div class="stats-summary">
+                <div class="stat-node"><span class="stat-val" id="end-score">0</span><span class="stat-lbl">Final Score</span></div>
+                <div class="stat-node"><span class="stat-val" id="end-bonus" style="color:var(--success);">+0</span><span class="stat-lbl">Velocity Bonus</span></div>
+            </div>
+
+            <button class="btn" onclick="switchActiveView('view-dash')">Dismiss Report</button>
+        </div>
+
+        <!-- 📊 VIEW: GENERAL STATISTICAL LEDGER -->
+        <div id="view-stats" class="view hidden">
+            <h1>Analytics Ledger</h1>
+            <p class="subtitle">Permanent Local Performance Metrics</p>
+
+            <div class="stats-summary">
+                <div class="stat-node"><span class="stat-val" id="stat-accuracy">0%</span><span class="stat-lbl">Accuracy Rating</span></div>
+                <div class="stat-node"><span class="stat-val" id="stat-best-streak" style="color:var(--warning);">0</span><span class="stat-lbl">Peak Hit Streak</span></div>
+                <div class="stat-node"><span class="stat-val" id="stat-correct" style="color:var(--success);">0</span><span class="stat-lbl">Correct Submissions</span></div>
+                <div class="stat-node"><span class="stat-val" id="stat-wrong" style="color:var(--error);">0</span><span class="stat-lbl">System Failures</span></div>
+            </div>
+
+            <button class="btn" onclick="switchActiveView('view-dash')">Return</button>
         </div>
     </div>
 
     <script>
-        const names = ["MOSES", "ABRAHAM", "ESTHER", "SOLOMON", "ELIJAH", "REBEKAH", "PETER", "MARTHA"];
-        let currentTarget = "";
-        let streak = 0;
+        // 🧩 ENGINES CORE DATA MATRIX
+        const VOCABULARY_DICTIONARY = {
+            easy: {
+                all: ["Peter", "Mary", "Ruth", "Noah", "David", "Adam", "Eve", "John", "Mark", "Paul", "Isaac"],
+                ot: ["Noah", "David", "Adam", "Eve", "Isaac"],
+                nt: ["Peter", "Mary", "John", "Mark", "Paul"],
+                women: ["Mary", "Ruth", "Eve"]
+            },
+            medium: {
+                all: ["Elizabeth", "Abraham", "Elijah", "Lazarus", "Gideon", "Samson", "Deborah", "Solomon", "Esther", "Samuel"],
+                ot: ["Abraham", "Elijah", "Gideon", "Samson", "Deborah", "Solomon", "Samuel"],
+                nt: ["Elizabeth", "Lazarus"],
+                women: ["Elizabeth", "Deborah", "Esther"]
+            },
+            hard: {
+                all: ["Nebuchadnezzar", "Melchizedek", "Methuselah", "Hezekiah", "Sennacherib", "Zerubbabel", "Jehoiakim", "Mephibosheth"],
+                ot: ["Nebuchadnezzar", "Melchizedek", "Methuselah", "Hezekiah", "Sennacherib", "Zerubbabel", "Jehoiakim", "Mephibosheth"],
+                nt: ["Melchizedek"], 
+                women: ["Athaliah", "Maacah", "Zipporah"] 
+            }
+        };
 
-        // 🎬 Intro Sequence (Compatible with all browsers)
+        // ⚙️ INITIAL CONFIG & POOL STATES
+        let activePrefs = { diff: 'easy', cat: 'all' };
+        let liveSession = { pool: [], index: 0, score: 0, speedBonus: 0, streak: 0, lives: 3, timeLeft: 100, lockTurn: false };
+        let coreSystemClock = null;
+        let isSecretUnlocked = localStorage.getItem('scramble_secret') === 'true';
+
+        // 💾 SECURE STORAGE RECEPTACLE
+        let savedStore = JSON.parse(localStorage.getItem('scramble_System_Data')) || {
+            games: 0, correct: 0, wrong: 0, topStreak: 0, dailyStreak: 0, timestamp: null
+        };
+
+        // 🎬 MULTI-PLATFORM RUNTIME LOAD
         window.onload = () => {
+            initBackgroundParticles();
             setTimeout(() => {
                 document.getElementById('intro-screen').style.transform = 'translateY(-100%)';
                 setTimeout(() => {
                     document.getElementById('app-shell').classList.add('active');
+                    if(isSecretUnlocked) enableSecretGraphics();
                 }, 400);
-            }, 2000);
+            }, 2200);
         };
 
-        function startGame() {
-            document.getElementById('dash-view').classList.add('hidden');
-            document.getElementById('game-view').classList.remove('hidden');
-            nextWord();
-        }
+        // 🧿 BACKGROUND PARTICLES SYSTEM
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particleArray = [];
 
-        function scramble(word) {
-            let arr = word.split(''), i = arr.length;
-            while(i--) {
-                let j = Math.floor(Math.random()*(i+1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
+        function initBackgroundParticles() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particleArray = [];
+            for(let i=0; i<35; i++) {
+                particleArray.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2.5 + 0.5,
+                    speedY: Math.random() * 0.4 + 0.1,
+                    alpha: Math.random() * 0.4 + 0.1
+                });
             }
-            return arr.join('');
+            renderParticleLoop();
         }
 
-        function nextWord() {
-            currentTarget = names[Math.floor(Math.random() * names.length)];
-            document.getElementById('scramble-box').textContent = scramble(currentTarget);
-            document.getElementById('guess-input').value = "";
-            document.getElementById('guess-input').focus();
+        function renderParticleLoop() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(255, 255, 255, ";
+            for(let i=0; i<particleArray.length; i++) {
+                let p = particleArray[i];
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                p.y -= p.speedY;
+                if(p.y < 0) p.y = canvas.height;
+            }
+            requestAnimationFrame(renderParticleLoop);
+        }
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // 🎵 PLATFORM OSCILLATOR AUDIO SYNTHESIZER 
+        function playSynthesizedAudio(flavor) {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+
+                if (flavor === 'right') {
+                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                    osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.08); // A5
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.22);
+                } else if (flavor === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.22);
+                } else if (flavor === 'victory') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.08);
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.16);
+                    osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.24);
+                    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.45);
+                }
+            } catch(error) { console.log("Audio block prevented."); }
         }
 
-        function checkAnswer() {
-            const guess = document.getElementById('guess-input').value.trim().toUpperCase();
-            const badge = document.getElementById('streak-badge');
+        // 📳 MULTI-PLATFORM HAPTIC VIBRATION
+        function invokeHapticFeedback(pattern) {
+            if (navigator.vibrate) navigator.vibrate(pattern);
+        }
 
-            if (guess === currentTarget) {
-                streak++;
-                badge.classList.remove('hidden');
-                badge.textContent = `🔥 STREAK: ${streak}`;
-                
-                // Android-style haptic (if supported)
-                if(navigator.vibrate) navigator.vibrate(50);
-                
-                nextWord();
+        // 🎲 GENERATIVE TEXT SHUFFLER
+        function calculateScramble(word) {
+            let splitArr = word.toUpperCase().split(''), iterations = splitArr.length;
+            while (iterations--) {
+                let randomTarget = Math.floor(Math.random() * (iterations + 1));
+                [splitArr[iterations], splitArr[randomTarget]] = [splitArr[randomTarget], splitArr[iterations]];
+            }
+            let outputStr = splitArr.join('');
+            return (outputStr === word.toUpperCase() && word.length > 2) ? calculateScramble(word) : outputStr;
+        }
+
+        function setPreference(category, value, element) {
+            activePrefs[category] = value;
+            document.querySelectorAll(`[data-type="${category}"]`).forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function switchActiveView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+            if(viewId === 'view-dash') syncDashboardData();
+            if(viewId === 'view-stats') syncLedgerData();
+        }
+
+        // 📊 STORAGE SYNCHRONIZATION DATA LOOPS
+        function syncDashboardData() {
+            evaluateDailyStreakTracking();
+            document.getElementById('dash-games').textContent = savedStore.games;
+            document.getElementById('dash-streak').textContent = savedStore.dailyStreak;
+        }
+
+        function syncLedgerData() {
+            const analyticalTotal = savedStore.correct + savedStore.wrong;
+            const absolutePct = analyticalTotal === 0 ? 0 : Math.round((savedStore.correct / analyticalTotal) * 100);
+            document.getElementById('stat-accuracy').textContent = absolutePct + "%";
+            document.getElementById('stat-best-streak').textContent = savedStore.topStreak;
+            document.getElementById('stat-correct').textContent = savedStore.correct;
+            document.getElementById('stat-wrong').textContent = savedStore.wrong;
+        }
+
+        function evaluateDailyStreakTracking() {
+            const timestampNow = new Date();
+            if (savedStore.timestamp) {
+                const finalDateObj = new Date(savedStore.timestamp);
+                const deltaDuration = Math.abs(timestampNow - finalDateObj);
+                const elapsedDays = Math.ceil(deltaDuration / (1000 * 60 * 60 * 24));
+                if (elapsedDays > 1) savedStore.dailyStreak = 0; // Streak broken over 24H gap
+            }
+            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
+        }
+
+        // 🎮 LIVE OPERATIONS ENGINE
+        function startCampaignSession() {
+            let selectedPool = VOCABULARY_DICTIONARY[activePrefs.diff][activePrefs.cat];
+            if(!selectedPool || selectedPool.length === 0) selectedPool = VOCABULARY_DICTIONARY[activePrefs.diff]['all'];
+            
+            liveSession.pool = selectedPool.map(strName => ({ original: strName, scrambled: calculateScramble(strName) })).sort(() => Math.random() - 0.5);
+            liveSession.index = 0;
+            liveSession.score = 0;
+            liveSession.speedBonus = 0;
+            liveSession.streak = 0;
+            liveSession.lives = 3;
+            liveSession.lockTurn = false;
+
+            savedStore.games++;
+            savedStore.timestamp = new Date().getTime();
+            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
+
+            switchActiveView('view-game');
+            syncHUD();
+            displayCurrentRound();
+        }
+
+        function syncHUD() {
+            document.getElementById('game-score').textContent = liveSession.score;
+            document.getElementById('game-lives').textContent = "❤️".repeat(liveSession.lives);
+            const streakPill = document.getElementById('game-streak-pill');
+            if (liveSession.streak > 0) {
+                streakPill.classList.remove('hidden');
+                document.getElementById('game-streak-val').textContent = liveSession.streak;
             } else {
-                streak = 0;
-                badge.classList.add('hidden');
-                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                alert("Almost! The answer was: " + currentTarget);
-                nextWord();
+                streakPill.classList.add('hidden');
             }
         }
 
-        // Enter key support
-        document.getElementById('guess-input').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') checkAnswer();
+        function displayCurrentRound() {
+            if(liveSession.index >= liveSession.pool.length || liveSession.lives <= 0) {
+                return compileFinalReport();
+            }
+            liveSession.lockTurn = false;
+            document.getElementById('scrambled-target').textContent = liveSession.pool[liveSession.index].scrambled;
+            
+            const txtInput = document.getElementById('game-input');
+            txtInput.value = ""; txtInput.disabled = false; txtInput.focus();
+            
+            const subBtn = document.getElementById('game-action-btn');
+            subBtn.textContent = "Validate"; subBtn.className = "btn";
+            document.getElementById('game-feedback').textContent = "";
+            
+            executeChronographTimer();
+        }
+
+        function executeChronographTimer() {
+            clearInterval(coreSystemClock);
+            liveSession.timeLeft = 100;
+            const barGraphic = document.getElementById('game-timer');
+            let incrementalDrain = activePrefs.diff === 'easy' ? 0.7 : activePrefs.diff === 'medium' ? 1.3 : 2.2;
+
+            coreSystemClock = setInterval(() => {
+                liveSession.timeLeft -= incrementalDrain;
+                if(liveSession.timeLeft <= 0) {
+                    liveSession.timeLeft = 0;
+                    clearInterval(coreSystemClock);
+                    evaluateSubmissionData(true); // Process forced timeout fail
+                }
+                barGraphic.style.transform = `scaleX(${liveSession.timeLeft / 100})`;
+            }, 100);
+        }
+
+        function submitGuessedAnswer() {
+            if (liveSession.lockTurn) {
+                liveSession.index++;
+                displayCurrentRound();
+                return;
+            }
+            evaluateSubmissionData(false);
+        }
+
+        function evaluateSubmissionData(forcedTimeout) {
+            clearInterval(coreSystemClock);
+            liveSession.lockTurn = true;
+            
+            const textElement = document.getElementById('game-input');
+            let processingGuess = textElement.value.trim().toLowerCase();
+            let actualSolution = liveSession.pool[liveSession.index].original.toLowerCase();
+
+            if (!forcedTimeout && processingGuess === actualSolution) {
+                liveSession.score += 10;
+                savedStore.correct++;
+                liveSession.streak++;
+                if(liveSession.streak > savedStore.topStreak) savedStore.topStreak = liveSession.streak;
+
+                let velocityBonusPoints = 0;
+                if(liveSession.timeLeft > 50) {
+                    velocityBonusPoints = Math.round((liveSession.timeLeft - 50) / 8);
+                    liveSession.speedBonus += velocityBonusPoints;
+                    liveSession.score += velocityBonusPoints;
+                }
+
+                invokeHapticFeedback(40);
+                playSynthesizedAudio('right');
+                document.getElementById('game-feedback').innerHTML = `<span style="color:var(--success)">✨ Perfect Execution! ${velocityBonusPoints > 0 ? '+'+velocityBonusPoints+' Velocity!':''}</span>`;
+            } else {
+                liveSession.lives--;
+                liveSession.streak = 0;
+                savedStore.wrong++;
+
+                invokeHapticFeedback([90, 40, 90]);
+                playSynthesizedAudio('wrong');
+                
+                const frameShell = document.getElementById('app-shell');
+                frameShell.classList.add('shake');
+                setTimeout(() => frameShell.classList.remove('shake'), 300);
+
+                let reportAlertString = forcedTimeout ? "⏰ Chrono Expired!" : "❌ Verification Deficit!";
+                document.getElementById('game-feedback').innerHTML = `<span style="color:var(--error)">${reportAlertString} solution: ${liveSession.pool[liveSession.index].original}</span>`;
+            }
+            
+            textElement.disabled = true;
+            syncHUD();
+            
+            const subBtn = document.getElementById('game-action-btn');
+            subBtn.textContent = "Proceed";
+            subBtn.className = "btn btn-next";
+            
+            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
+            verifyScoreUnlocks();
+        }
+
+        // 🔐 PRO UNLOCKS SYSTEM
+        function verifyScoreUnlocks() {
+            if(liveSession.score >= 110 && !isSecretUnlocked) {
+                isSecretUnlocked = true;
+                localStorage.setItem('scramble_secret', 'true');
+                enableSecretGraphics();
+            }
+        }
+
+        function enableSecretGraphics() {
+            document.getElementById('app-shell').classList.add('secret-active');
+            document.getElementById('secret-notice').classList.remove('hidden');
+        }
+
+        function compileFinalReport() {
+            clearInterval(coreSystemClock);
+            
+            if(liveSession.score > 20) {
+                const cachedDayStr = savedStore.timestamp ? new Date(savedStore.timestamp).toDateString() : null;
+                const activeDayStr = new Date().toDateString();
+                if(cachedDayStr !== activeDayStr) savedStore.dailyStreak++;
+            }
+            localStorage.setItem('scramble_System_Data', JSON.stringify(savedStore));
+
+            document.getElementById('end-title').textContent = liveSession.lives <= 0 ? "Defeat" : "Campaign Clear";
+            document.getElementById('end-title').style.color = liveSession.lives <= 0 ? "var(--error)" : "var(--success)";
+            document.getElementById('end-score').textContent = liveSession.score;
+            document.getElementById('end-bonus').textContent = "+" + liveSession.speedBonus;
+
+            if(liveSession.lives > 0) playSynthesizedAudio('victory');
+            switchActiveView('view-end');
+        }
+
+        // Physical enter keys hooking for standalone desktop testers
+        document.getElementById('game-input').addEventListener('keypress', event => {
+            if(event.key === 'Enter') submitGuessedAnswer();
         });
+
+        syncDashboardData();
     </script>
 </body>
 </html>
